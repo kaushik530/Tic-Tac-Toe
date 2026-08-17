@@ -1,21 +1,28 @@
-const gameBoard = (function(){
-    let board=["","","","","","","","",""];
-    
-    function updateState(index,choice){
-        board[index]=choice;
-    }
+const gameBoard = (function(){    
 
-    function getBoard(){
-        
-        return board;
+    
+    function updateBoard(event,playerMarker ) {
+        let cell=document.querySelector(".cell");
+        event.textContent=playerMarker;
+        // update DOM
     }
     function getcellStatus(index){
         return board[index];
     }
+
+    function resetBoard() {
+    const cells = document.querySelectorAll(".cell");
+
+    cells.forEach(cell => {
+        cell.textContent = "";
+    });
+    }
+    
     return {
-    updateState,
-    getBoard,
-    getcellStatus
+    updateBoard,
+    getcellStatus,
+    resetBoard
+
 }
 })(); //IIFE to intiate a single game board
 
@@ -24,14 +31,6 @@ function createUser(name,marker) //factory for creating users
 {
     return {name,marker};
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -51,51 +50,54 @@ function(){
     let gameOver=false;
     
     function playGame(player1,player2){
+        
         let currentPlayer=player2;
         let board=document.querySelector(".board");
-        while(!gameOver){  
-            board.addEventListener("click",(event) => displayController.renderBoard(event,currentPlayer.marker));
-            
-            if (gameBoard.getcellStatus(choice) !== ""){
-                console.log("cell already occupied");
-                continue;
-            }
+        let choice="";
 
-            console.log(`${currentPlayer.name} marked ${currentPlayer.marker} at ${choice} `);
-            gameBoard.updateState(choice,currentPlayer.marker);
+            board.addEventListener("click",(event) => {
             
-            if(checkWin(gameBoard.getBoard())){
-                gameOver=true;
+                choice=event.target;
+            
+            if (choice.textContent===""){
+            
+            console.log(`${currentPlayer.name} marked ${currentPlayer.marker} at ${choice.dataset.index} `);
+            gameBoard.updateBoard(choice,currentPlayer.marker);
+            
+            }
+            if(checkWin()){
+                gameBoard.resetBoard();
                 console.log(`${currentPlayer.name} is the winner.`)
             }
             else if(checkDraw()){
-                gameOver=true;
+                gameBoard.resetBoard();
                 console.log(`It's draw!`);
                 
             }
             else{
                 currentPlayer=currentPlayer===player1?player2:player1;
             }
-        }
+                });
     }
 
     function checkWin() {
-    const board = gameBoard.getBoard();
+    const cells = document.querySelectorAll(".cell");
 
     return winCombination.some(combination => {
         const [a, b, c] = combination;
 
         return (
-            board[a] !== "" &&
-            board[a] === board[b] &&
-            board[a] === board[c]
+            cells[a].textContent !== "" &&
+            cells[a].textContent === cells[b].textContent &&
+            cells[a].textContent === cells[c].textContent
         );
     });
     }
     
     function checkDraw() {
+        const cells = document.querySelectorAll(".cell");
     
-        return gameBoard.getBoard().every(cell => cell !== "");
+        return [...cells].every(cell => cell.textContent !== "");
     
     }
 
@@ -115,18 +117,3 @@ playButton.addEventListener("click", () => {
 
     gameControl.playGame(player1, player2);
 });
-
-
-
-const displayController = (() => {
-    
-    function renderBoard(event,playerMarker ) {
-        let cell=document.querySelector(".cell");
-        event.target.textContent=playerMarker;
-        // update DOM
-    }
-
-
-    return {
-        renderBoard,    };
-})();
