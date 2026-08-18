@@ -1,17 +1,87 @@
-/* CSS RESET */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+/* =========================
+   CSS RESET
+   ========================= */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -20,30 +90,47 @@ time, mark, audio, video {
     vertical-align: baseline;
 }
 
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+section {
     display: block;
 }
+
 
 body {
     line-height: 1;
 }
 
-ol, ul {
+
+ol,
+ul {
     list-style: none;
 }
 
-blockquote, q {
+
+blockquote,
+q {
     quotes: none;
 }
+
 
 blockquote::before,
 blockquote::after,
 q::before,
 q::after {
     content: '';
-    content: none;
 }
+
 
 table {
     border-collapse: collapse;
@@ -51,7 +138,9 @@ table {
 }
 
 
-/* COLORS */
+/* =========================
+   COLORS
+   ========================= */
 
 :root {
     --yellow: #FFE97D;
@@ -61,27 +150,49 @@ table {
 }
 
 
+/* =========================
+   BODY
+   ========================= */
+
 body {
     background-color: var(--cream);
 }
 
 
+/* =========================
+   MAIN CONTAINER
+   ========================= */
+
 .main {
     position: fixed;
     top: 50%;
     left: 50%;
+
     transform: translate(-50%, -50%);
-    display: none;
-	flex-direction: column;
-	align-items: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
 }
 
 
+/* =========================
+   BOARD
+   ========================= */
+
 .board {
-	position: fixed;
+    position: relative;
+
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+
+    background-color: #F8D85C;
+    border-radius: 20px;
+    padding: 20px;
+
     gap: 10px;
 
     width: 400px;
@@ -89,69 +200,352 @@ body {
 }
 
 
+/* =========================
+   CELLS
+   ========================= */
+
 .cell {
     display: flex;
     align-items: center;
     justify-content: center;
 
     box-sizing: border-box;
+
     border: 2px solid var(--pink);
-    border-radius: 20px;
+    border-radius: 10px;
+
     background-color: var(--yellow);
 
-	box-shadow: 2px 2px 0px #B52F63;
+    box-shadow: 2px 2px 0 #B52F63;
 
     transition: background-color 150ms ease;
 }
-.cell:hover{
-	    background-color: #f5d95f;
+
+
+.cell:hover {
+    background-color: #F5D95F;
 }
+
+
+/* =========================
+   MARKS
+   ========================= */
+
 .mark {
     color: var(--pink);
+
     font-family: Arial, sans-serif;
     font-size: 2.5rem;
     font-weight: 500;
+
     line-height: 1;
+
     transform: translateY(-2px);
 }
 
-.board {
-    position: relative;
-}
+
+/* =========================
+   WINNING LINE
+   ========================= */
 
 .win-line {
     position: absolute;
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     pointer-events: none;
 }
+
+
 .line {
+    display: none;
+
     stroke: var(--pink);
     stroke-width: 6;
     stroke-linecap: round;
-
-    display: none;
 
     stroke-dasharray: 400;
     stroke-dashoffset: 400;
 }
 
+
 .line.show {
     display: block;
+
     animation: draw-line 400ms ease-out forwards;
 }
 
+
 @keyframes draw-line {
+
     to {
         stroke-dashoffset: 0;
     }
+
 }
+
+
+/* =========================
+   DISPLAY
+   ========================= */
 
 .display {
     position: absolute;
-    bottom: -50px;
+    top: -35px;
 
-    width: 300px;
+    width: 400px;
+    height: 20px;
+
+    text-align: center;
+
+    color: var(--pink);
+
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+.main button {
+    box-sizing: border-box;
+
+    width: 140px;
+    padding: 12px 20px;
+
+    border: 2px solid transparent;
+    border-radius: 12px;
+
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 200ms ease,
+        transform 150ms ease,
+        box-shadow 150ms ease;
+}
+
+
+/* PLAY */
+
+.play {
+    background-color: #7CCB4A;
+    color: white;
+
+    box-shadow: 3px 3px 0 #4F9630;
+}
+
+.play:hover {
+    background-color: #8BD65A;
+}
+
+.play:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+}
+
+.play.hidden {
+    display: none;
+}
+
+
+/* RESET */
+
+.reset {
+    background-color: #E66B78;
+    color: white;
+
+    box-shadow: 3px 3px 0 #B84C59;
+}
+
+.reset:hover {
+    background-color: #ED7C87;
+}
+
+.reset:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+}
+
+
+/* =========================
+   SETUP
+   ========================= */
+.setup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+
+/* =========================
+   NAME SECTION
+   ========================= */
+
+.name-section {
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.name-section.active {
+    display: flex;
+}
+
+.name-section p,
+.game-mode p {
+    color: var(--pink);
+
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+.player-names {
+    display: flex;
+    gap: 10px;
+}
+
+
+.player-names input {
+    box-sizing: border-box;
+
+    width: 140px;
+    padding: 10px;
+
+    border: 2px solid var(--pink);
+    border-radius: 10px;
+
+    background-color: var(--yellow);
+    color: var(--pink);
+
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+
+    outline: none;
+}
+
+
+.player-names input::placeholder {
+    color: #B52F63;
+}
+
+
+.player-names input:focus {
+    background-color: #FFF3B5;
+}
+
+
+/* CONTINUE */
+
+.names-submit {
+    width: 140px;
+    padding: 10px;
+
+    border: 2px solid var(--pink);
+    border-radius: 10px;
+
+    background-color: var(--pink);
+    color: white;
+
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: background-color 200ms ease;
+}
+
+.names-submit:hover {
+    background-color: #EA568C;
+}
+
+
+/* =========================
+   GAME MODE
+   ========================= */
+
+.game-mode {
+    display: none;
+
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.game-mode.active {
+    display: flex;
+}
+
+.game-mode p {
+    width: 100%;
     text-align: center;
 }
+
+
+.game-mode button {
+    width: 120px;
+    padding: 10px 15px;
+
+    border: 2px solid var(--pink);
+    border-radius: 10px;
+
+    background-color: transparent;
+    color: var(--pink);
+
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        transform 150ms ease,
+        box-shadow 150ms ease;
+}
+
+
+.game-mode button:hover {
+    background-color: var(--yellow);
+}
+
+
+.game-mode button:active {
+    transform: translate(2px, 2px);
+}
+
+
+.game-mode button.selected {
+    background-color: var(--pink);
+    color: white;
+
+    box-shadow: 3px 3px 0 #B52F63;
+}
+
+
