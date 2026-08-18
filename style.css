@@ -157,8 +157,10 @@ body {
     box-sizing: border-box;
 
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+
 
     background-color: #F8D85C;
     border-radius: 20px;
@@ -476,16 +478,15 @@ body {
         background-color: var(--yellow);
     }
 }
-
 @media (max-width: 600px) {
 
     .main {
+        top: 30%;
         width: 90vw;
         height: 90vw;
 
         max-width: 400px;
         max-height: 400px;
-        
     }
 
     .board {
@@ -516,5 +517,4 @@ body {
     .player-names input {
         width: 42%;
     }
-    
 }
