@@ -12,11 +12,11 @@ const gameBoard = (function () {
         return board[index];
     }
 
-    function resetBoard() {
+    function resetBoard() { //ui reset
     const display=document.querySelector(".display");
     const marks = document.querySelectorAll(".mark");
     const lines = document.querySelectorAll(".line");
-
+    
     display.textContent="";
     marks.forEach(mark => {
         mark.textContent = "";
@@ -54,18 +54,24 @@ let gameControl = (
             [0, 4, 8],
             [2, 4, 6]
         ];
+
         const lineNames = [
-        "row-0",
-        "row-1",
-        "row-2",
-        "col-0",
-        "col-1",
-        "col-2",
-        "diag-0",
-        "diag-1"
-         ];
+            "row-0",
+            "row-1",
+            "row-2",
+            "col-0",
+            "col-1",
+            "col-2",
+            "diag-0",
+            "diag-1"
+        ];
 
         let gameOver = false;
+
+        function resetGame() { // game logic reset
+            gameOver = false;
+            gameBoard.resetBoard();
+        }
 
         function playGame(player1, player2) {
 
@@ -75,31 +81,36 @@ let gameControl = (
 
             board.addEventListener("click", (event) => {
 
-                
-            const cell = event.target.closest(".cell");
+                const cell = event.target.closest(".cell");
 
-             if (!cell) {
-                return;
-             }
+                if (!cell) {
+                    return;
+                }
 
-             const choice = cell.querySelector(".mark");
+                const choice = cell.querySelector(".mark");
 
-                if (choice.textContent !== "") {
+                if (choice.textContent !== "" || gameOver) {
                     return;
                 }
 
                 gameBoard.updateBoard(choice, currentPlayer.marker);
+
                 const winIndex = checkWin();
 
                 if (winIndex !== -1) {
-                    const line = document.querySelector(`.${lineNames[winIndex]}`);
+                    const line = document.querySelector(
+                        `.${lineNames[winIndex]}`
+                    );
+
                     line.classList.add("show");
+                    gameOver = true;
 
                     document.querySelector(".display").textContent =
                         `${currentPlayer.name} is the winner.`;
                 }
                 else if (checkDraw()) {
-                    gameBoard.resetBoard();
+                    gameOver = true;
+
                     document.querySelector(".display").textContent =
                         `It's a draw.`;
                 }
@@ -109,6 +120,7 @@ let gameControl = (
                 }
             });
         }
+      
 
 function checkWin() {
     const cells = document.querySelectorAll(".cell");
@@ -133,7 +145,8 @@ function checkWin() {
             return [...cells].every(cell => cell.textContent !== "");
         }
 
-        return { playGame };
+        
+return { playGame , resetGame};
     }
 )();
 
@@ -144,7 +157,7 @@ const resetButton = document.querySelector(".reset");
 
 
 resetButton.addEventListener("click", () =>{
-    gameBoard.resetBoard();
+    gameControl.resetGame();
 })
 
 playButton.addEventListener("click", () => {
