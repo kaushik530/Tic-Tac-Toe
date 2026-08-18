@@ -1,119 +1,161 @@
-const gameBoard = (function(){    
+const gameBoard = (function () {
 
-    
-    function updateBoard(event,playerMarker ) {
-        let cell=document.querySelector(".cell");
-        event.textContent=playerMarker;
+    function updateBoard(event, playerMarker) {
+        let cell = document.querySelector(".cell");
+        event.textContent = playerMarker;
+
         // update DOM
+
     }
-    function getcellStatus(index){
+
+    function getcellStatus(index) {
         return board[index];
     }
 
     function resetBoard() {
-    const cells = document.querySelectorAll(".cell");
+    const display=document.querySelector(".display");
+    const marks = document.querySelectorAll(".mark");
+    const lines = document.querySelectorAll(".line");
 
-    cells.forEach(cell => {
-        cell.textContent = "";
+    display.textContent="";
+    marks.forEach(mark => {
+        mark.textContent = "";
     });
-    }
-    
+
+    lines.forEach(line => {
+        line.classList.remove("show");
+    });
+}
+
     return {
-    updateBoard,
-    getcellStatus,
-    resetBoard
+        updateBoard,
+        getcellStatus,
+        resetBoard
+    };
+})(); // IIFE to initiate a single game board
 
-}
-})(); //IIFE to intiate a single game board
 
-
-function createUser(name,marker) //factory for creating users
+function createUser(name, marker) // factory for creating users
 {
-    return {name,marker};
+    return { name, marker };
 }
 
 
+let gameControl = (
+    function () {
 
-let gameControl= (
-function(){
-    let winCombination = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-];
-  
-    let gameOver=false;
-    
-    function playGame(player1,player2){
-        
-        let currentPlayer=player2;
-        let board=document.querySelector(".board");
-        let choice="";
+        let winCombination = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+        const lineNames = [
+        "row-0",
+        "row-1",
+        "row-2",
+        "col-0",
+        "col-1",
+        "col-2",
+        "diag-0",
+        "diag-1"
+         ];
 
-            board.addEventListener("click",(event) => {
-            
-                choice=event.target;
-            
-            if (choice.textContent===""){
-            
-            console.log(`${currentPlayer.name} marked ${currentPlayer.marker} at ${choice.dataset.index} `);
-            gameBoard.updateBoard(choice,currentPlayer.marker);
-            
-            }
-            if(checkWin()){
-                gameBoard.resetBoard();
-                console.log(`${currentPlayer.name} is the winner.`)
-            }
-            else if(checkDraw()){
-                gameBoard.resetBoard();
-                console.log(`It's draw!`);
+        let gameOver = false;
+
+        function playGame(player1, player2) {
+
+            let currentPlayer = player2;
+            let board = document.querySelector(".board");
+            let choice = "";
+
+            board.addEventListener("click", (event) => {
+
                 
-            }
-            else{
-                currentPlayer=currentPlayer===player1?player2:player1;
-            }
-                });
-    }
+            const cell = event.target.closest(".cell");
 
-    function checkWin() {
+             if (!cell) {
+                return;
+             }
+
+             const choice = cell.querySelector(".mark");
+
+                if (choice.textContent !== "") {
+                    return;
+                }
+
+                gameBoard.updateBoard(choice, currentPlayer.marker);
+                const winIndex = checkWin();
+
+                if (winIndex !== -1) {
+                    const line = document.querySelector(`.${lineNames[winIndex]}`);
+                    line.classList.add("show");
+
+                    document.querySelector(".display").textContent =
+                        `${currentPlayer.name} is the winner.`;
+                }
+                else if (checkDraw()) {
+                    gameBoard.resetBoard();
+                    document.querySelector(".display").textContent =
+                        `It's a draw.`;
+                }
+                else {
+                    currentPlayer =
+                        currentPlayer === player1 ? player2 : player1;
+                }
+            });
+        }
+
+function checkWin() {
     const cells = document.querySelectorAll(".cell");
 
-    return winCombination.some(combination => {
+    return winCombination.findIndex(combination => {
         const [a, b, c] = combination;
 
+        const markA = cells[a].querySelector(".mark").textContent;
+        const markB = cells[b].querySelector(".mark").textContent;
+        const markC = cells[c].querySelector(".mark").textContent;
+
         return (
-            cells[a].textContent !== "" &&
-            cells[a].textContent === cells[b].textContent &&
-            cells[a].textContent === cells[c].textContent
+            markA !== "" &&
+            markA === markB &&
+            markA === markC
         );
     });
-    }
-    
-    function checkDraw() {
-        const cells = document.querySelectorAll(".cell");
-    
-        return [...cells].every(cell => cell.textContent !== "");
-    
-    }
-
-
-    return {playGame};
 }
+        function checkDraw() {
+            const cells = document.querySelectorAll(".cell");
 
+            return [...cells].every(cell => cell.textContent !== "");
+        }
+
+        return { playGame };
+    }
 )();
 
+(function() {
 const playButton = document.querySelector(".play");
+const resetButton = document.querySelector(".reset");
+
+
+
+resetButton.addEventListener("click", () =>{
+    gameBoard.resetBoard();
+})
 
 playButton.addEventListener("click", () => {
-    let main=document.querySelector(".main");
-    main.style.display="flex";
+
+    let main = document.querySelector(".main");
+    main.style.display = "flex";
+
     const player1 = createUser("bob", "o");
     const player2 = createUser("rob", "x");
 
     gameControl.playGame(player1, player2);
+
 });
+})();
